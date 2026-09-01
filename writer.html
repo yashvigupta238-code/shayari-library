@@ -1,0 +1,489 @@
+```html
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Shayari Library</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <h1 id="writerName">Shayari</h1>
+
+    <p id="writerSubtitle">Shayari Collection</p>
+
+</header>
+
+
+<main>
+
+
+    <button class="back-btn" onclick="history.back()">
+        ← Wapas
+    </button>
+
+
+    <section>
+
+        <h2>Shayari Collection</h2>
+
+        <div
+            id="shayariGallery"
+            class="shayari-images">
+        </div>
+
+    </section>
+
+
+</main>
+
+
+
+<!-- =========================
+     FULLSCREEN IMAGE VIEWER
+========================= -->
+
+<div
+    id="imageViewer"
+    class="image-viewer">
+
+
+    <button
+        class="close-viewer"
+        onclick="closeImage()">
+
+        ✕
+
+    </button>
+
+
+    <img
+        id="fullImage"
+        src=""
+        alt="Shayari">
+
+
+    <div class="image-actions">
+
+
+        <button
+            type="button"
+            onclick="downloadImage(event)">
+
+            ⬇ Download
+
+        </button>
+
+
+        <button
+            type="button"
+            onclick="shareImage(event)">
+
+            ↗ Share
+
+        </button>
+
+
+    </div>
+
+
+</div>
+
+
+
+<!-- WRITERS DATA -->
+
+<script src="writers.js"></script>
+
+
+<script>
+
+
+let currentImage = "";
+
+let currentFileName = "";
+
+
+
+/* =========================
+   GET WRITER NAME
+========================= */
+
+const params =
+    new URLSearchParams(
+        window.location.search
+    );
+
+
+const writerName =
+    params.get("name");
+
+
+const writer =
+    writers[writerName];
+
+
+
+/* =========================
+   LOAD WRITER
+========================= */
+
+if (writer) {
+
+
+    document.getElementById(
+        "writerName"
+    ).textContent =
+        writerName;
+
+
+    document.getElementById(
+        "writerSubtitle"
+    ).textContent =
+        writerName +
+        " ki Shayari";
+
+
+    const gallery =
+        document.getElementById(
+            "shayariGallery"
+        );
+
+
+    /* =========================
+       LOAD ALL IMAGES
+    ========================= */
+
+    writer.images.forEach(
+        function(imageName) {
+
+
+            const box =
+                document.createElement(
+                    "div"
+                );
+
+
+            box.className =
+                "shayari-image";
+
+
+            const image =
+                document.createElement(
+                    "img"
+                );
+
+
+            image.src =
+                writer.folder +
+                "/" +
+                imageName;
+
+
+            image.alt =
+                writerName +
+                " Shayari";
+
+
+            image.loading =
+                "lazy";
+
+
+            image.onclick =
+                function() {
+
+                    openImage(
+                        image,
+                        imageName
+                    );
+
+                };
+
+
+            box.appendChild(
+                image
+            );
+
+
+            gallery.appendChild(
+                box
+            );
+
+
+        }
+    );
+
+
+}
+
+else {
+
+
+    document.getElementById(
+        "writerName"
+    ).textContent =
+        "Writer nahi mila";
+
+
+}
+
+
+
+/* =========================
+   OPEN FULLSCREEN
+========================= */
+
+function openImage(
+    image,
+    fileName
+) {
+
+
+    currentImage =
+        image.src;
+
+
+    currentFileName =
+        fileName;
+
+
+    document.getElementById(
+        "fullImage"
+    ).src =
+        currentImage;
+
+
+    document.getElementById(
+        "imageViewer"
+    ).style.display =
+        "flex";
+
+
+}
+
+
+
+/* =========================
+   CLOSE IMAGE
+========================= */
+
+function closeImage() {
+
+
+    document.getElementById(
+        "imageViewer"
+    ).style.display =
+        "none";
+
+
+}
+
+
+
+/* =========================
+   DOWNLOAD IMAGE
+========================= */
+
+async function downloadImage(event) {
+
+
+    event.stopPropagation();
+
+
+    if (!currentImage) {
+
+        return;
+
+    }
+
+
+    try {
+
+
+        const response =
+            await fetch(
+                currentImage
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Image download failed"
+            );
+
+        }
+
+
+        const blob =
+            await response.blob();
+
+
+        const blobUrl =
+            URL.createObjectURL(
+                blob
+            );
+
+
+        const link =
+            document.createElement(
+                "a"
+            );
+
+
+        link.href =
+            blobUrl;
+
+
+        link.download =
+            currentFileName ||
+            writerName +
+            "-shayari";
+
+
+        document.body.appendChild(
+            link
+        );
+
+
+        link.click();
+
+
+        document.body.removeChild(
+            link
+        );
+
+
+        setTimeout(
+            function() {
+
+                URL.revokeObjectURL(
+                    blobUrl
+                );
+
+            },
+            1000
+        );
+
+
+    }
+
+    catch (error) {
+
+
+        console.error(error);
+
+
+        alert(
+            "Download nahi ho paya."
+        );
+
+
+    }
+
+
+}
+
+
+
+/* =========================
+   SHARE
+========================= */
+
+async function shareImage(event) {
+
+
+    event.stopPropagation();
+
+
+    if (!navigator.share) {
+
+
+        alert(
+            "Is browser me Share option available nahi hai."
+        );
+
+
+        return;
+
+    }
+
+
+    try {
+
+
+        await navigator.share({
+
+            title:
+                writerName +
+                " Shayari",
+
+            text:
+                writerName +
+                " ki Shayari",
+
+            url:
+                currentImage
+
+        });
+
+
+    }
+
+    catch (error) {
+
+
+        console.log(
+            "Share cancelled"
+        );
+
+
+    }
+
+
+}
+
+
+
+/* =========================
+   ESCAPE KEY
+========================= */
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+
+
+        if (
+            event.key === "Escape"
+        ) {
+
+            closeImage();
+
+        }
+
+
+    }
+);
+
+
+</script>
+
+
+</body>
+
+</html>
+```

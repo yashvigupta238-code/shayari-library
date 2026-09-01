@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Shayari Library</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <h1>✒️ Shayari Library</h1>
+
+    <p>Lafzon ka ek khoobsurat jahaan</p>
+
+</header>
+
+
+<main>
+
+
+    <!-- SEARCH -->
+
+    <div class="search-box">
+
+        <input
+            type="text"
+            id="search"
+            placeholder="🔍 Shayar ka naam search karein..."
+        >
+
+    </div>
+
+
+
+    <!-- WRITERS -->
+
+    <section>
+
+        <h2>Popular Shayars</h2>
+
+        <div
+            class="shayars"
+            id="writerButtons">
+        </div>
+
+    </section>
+
+
+
+    <!-- SHAYARI -->
+
+    <section>
+
+        <h2>Shayari</h2>
+
+        <div
+            id="shayari-container">
+        </div>
+
+    </section>
+
+
+</main>
+
+
+
+<script src="writers.js"></script>
+
+
+<script>
+
+
+const container =
+    document.getElementById(
+        "shayari-container"
+    );
+
+
+const buttons =
+    document.getElementById(
+        "writerButtons"
+    );
+
+
+const search =
+    document.getElementById(
+        "search"
+    );
+
+
+
+/* =========================
+   CREATE WRITERS
+========================= */
+
+Object.keys(writers).forEach(
+    function(name) {
+
+
+        const writer =
+            writers[name];
+
+
+        /* BUTTON */
+
+        const button =
+            document.createElement(
+                "button"
+            );
+
+
+        button.textContent =
+            name;
+
+
+        button.onclick =
+            function() {
+
+                openWriter(name);
+
+            };
+
+
+        buttons.appendChild(button);
+
+
+
+        /* CARD */
+
+        const card =
+            document.createElement(
+                "div"
+            );
+
+
+        card.className =
+            "card";
+
+
+        card.dataset.writer =
+            name;
+
+
+        card.onclick =
+            function() {
+
+                openWriter(name);
+
+            };
+
+
+
+        /* IMAGE */
+
+        const image =
+            document.createElement(
+                "img"
+            );
+
+
+        image.src =
+            writer.folder +
+            "/" +
+            writer.image;
+
+
+        image.alt =
+            name +
+            " Shayari";
+
+
+
+        /* NAME */
+
+        const heading =
+            document.createElement(
+                "h3"
+            );
+
+
+        heading.textContent =
+            name;
+
+
+
+        card.appendChild(image);
+
+        card.appendChild(heading);
+
+        container.appendChild(card);
+
+
+    }
+);
+
+
+
+/* =========================
+   SEARCH
+========================= */
+
+search.addEventListener(
+    "input",
+    function() {
+
+
+        const value =
+            search.value
+            .toLowerCase()
+            .trim();
+
+
+        const cards =
+            document.querySelectorAll(
+                ".card"
+            );
+
+
+        cards.forEach(
+            function(card) {
+
+
+                const name =
+                    card.dataset.writer
+                    .toLowerCase();
+
+
+                if (
+                    name.includes(value)
+                ) {
+
+                    card.style.display =
+                        "block";
+
+                }
+
+                else {
+
+                    card.style.display =
+                        "none";
+
+                }
+
+
+            }
+        );
+
+
+    }
+);
+
+
+
+/* =========================
+   OPEN WRITER
+========================= */
+
+function openWriter(name) {
+
+
+    window.location.href =
+        "writer.html?name=" +
+        encodeURIComponent(name);
+
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>
