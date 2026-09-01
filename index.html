@@ -1,104 +1,96 @@
 <!DOCTYPE html>
+
 <html lang="hi">
 
 <head>
 
-    <meta charset="UTF-8">
+```
+<meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
 
-    <title>Shayari Library</title>
+<title>Shayari Library</title>
 
-    <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css">
+```
 
 </head>
 
-
 <body>
-
 
 <header>
 
-    <h1>✒️ Shayari Library</h1>
+```
+<h1>✒️ Shayari Library</h1>
 
-    <p>Lafzon ka ek khoobsurat jahaan</p>
+<p>Lafzon ka ek khoobsurat jahaan</p>
+```
 
 </header>
 
-
 <main>
 
+```
+<!-- SEARCH -->
 
-    <!-- SEARCH -->
+<div class="search-box">
 
-    <div class="search-box">
+    <input
+        type="text"
+        id="search"
+        placeholder="🔍 Shayar ka naam search karein..."
+    >
 
-        <input
-            type="text"
-            id="search"
-            placeholder="🔍 Shayar ka naam search karein..."
-        >
+</div>
 
+
+<!-- WRITERS -->
+
+<section>
+
+    <h2>Popular Shayars</h2>
+
+    <div
+        class="shayars"
+        id="writerButtons">
     </div>
 
+</section>
 
 
-    <!-- WRITERS -->
+<!-- SHAYARI -->
 
-    <section>
+<section>
 
-        <h2>Popular Shayars</h2>
+    <h2>Shayari</h2>
 
-        <div
-            class="shayars"
-            id="writerButtons">
-        </div>
+    <div id="shayari-container">
+    </div>
 
-    </section>
-
-
-
-    <!-- SHAYARI -->
-
-    <section>
-
-        <h2>Shayari</h2>
-
-        <div
-            id="shayari-container">
-        </div>
-
-    </section>
-
+</section>
+```
 
 </main>
 
-
-
 <script src="writers.js"></script>
 
-
 <script>
-
 
 const container =
     document.getElementById(
         "shayari-container"
     );
 
-
 const buttons =
     document.getElementById(
         "writerButtons"
     );
 
-
 const search =
     document.getElementById(
         "search"
     );
-
 
 
 /* =========================
@@ -108,33 +100,8 @@ const search =
 Object.keys(writers).forEach(
     function(name) {
 
-
         const writer =
             writers[name];
-
-
-        /* BUTTON */
-
-        const button =
-            document.createElement(
-                "button"
-            );
-
-
-        button.textContent =
-            name;
-
-
-        button.onclick =
-            function() {
-
-                openWriter(name);
-
-            };
-
-
-        buttons.appendChild(button);
-
 
 
         /* CARD */
@@ -144,14 +111,11 @@ Object.keys(writers).forEach(
                 "div"
             );
 
-
         card.className =
             "card";
 
-
         card.dataset.writer =
             name;
-
 
         card.onclick =
             function() {
@@ -161,7 +125,6 @@ Object.keys(writers).forEach(
             };
 
 
-
         /* IMAGE */
 
         const image =
@@ -169,17 +132,14 @@ Object.keys(writers).forEach(
                 "img"
             );
 
-
         image.src =
             writer.folder +
             "/" +
-            writer.image;
-
+            writer.images[0];
 
         image.alt =
             name +
             " Shayari";
-
 
 
         /* NAME */
@@ -189,22 +149,18 @@ Object.keys(writers).forEach(
                 "h3"
             );
 
-
         heading.textContent =
             name;
-
 
 
         card.appendChild(image);
 
         card.appendChild(heading);
 
-        container.appendChild(card);
-
+        buttons.appendChild(card);
 
     }
 );
-
 
 
 /* =========================
@@ -215,27 +171,22 @@ search.addEventListener(
     "input",
     function() {
 
-
         const value =
             search.value
             .toLowerCase()
             .trim();
-
 
         const cards =
             document.querySelectorAll(
                 ".card"
             );
 
-
         cards.forEach(
             function(card) {
-
 
                 const name =
                     card.dataset.writer
                     .toLowerCase();
-
 
                 if (
                     name.includes(value)
@@ -244,23 +195,18 @@ search.addEventListener(
                     card.style.display =
                         "block";
 
-                }
-
-                else {
+                } else {
 
                     card.style.display =
                         "none";
 
                 }
 
-
             }
         );
 
-
     }
 );
-
 
 
 /* =========================
@@ -269,17 +215,13 @@ search.addEventListener(
 
 function openWriter(name) {
 
-
     window.location.href =
         "writer.html?name=" +
         encodeURIComponent(name);
 
-
 }
 
-
 </script>
-
 
 </body>
 
